@@ -1,9 +1,16 @@
 const BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
+function getToken() {
+  return localStorage.getItem('ratolo_token');
+}
+
 async function req(method, path, body) {
+  const token = getToken();
+  const headers = { 'Content-Type': 'application/json' };
+  if (token) headers['Authorization'] = `Bearer ${token}`;
   const res = await fetch(`${BASE}${path}`, {
     method,
-    headers: { 'Content-Type': 'application/json' },
+    headers,
     body: body ? JSON.stringify(body) : undefined,
   });
   if (!res.ok) {
@@ -12,6 +19,13 @@ async function req(method, path, body) {
   }
   return res.json();
 }
+
+// Auth
+export const auth = {
+  register: (name, email, password) => req('POST', '/api/auth/register', { name, email, password }),
+  login: (email, password) => req('POST', '/api/auth/login', { email, password }),
+  me: () => req('GET', '/api/auth/me'),
+};
 
 // Chat sessions
 export const api = {

@@ -3,12 +3,16 @@ import Topbar from './components/Topbar/Topbar.jsx';
 import Onboarding from './components/Onboarding/Onboarding.jsx';
 import Chat from './components/Chat/Chat.jsx';
 import Sidebar from './components/Sidebar/Sidebar.jsx';
+import Login from './components/Login/Login.jsx';
 import { api } from './services/api.js';
 import styles from './App.module.css';
 
 const SEEN_KEY = 'ratolo_onboarding_seen';
 
 function App() {
+  const [user, setUser] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('ratolo_user')); } catch { return null; }
+  });
   const [stage, setStage] = useState(() =>
     localStorage.getItem(SEEN_KEY) ? 'chat' : 'onboarding'
   );
@@ -61,7 +65,22 @@ function App() {
     api.getSessions().then(list => { setSessions(list); setApiOnline(true); }).catch(() => {});
   }, []);
 
+  function handleLogin(loggedUser) {
+    setUser(loggedUser);
+    loadSessions();
+  }
+
+  function handleLogout() {
+    localStorage.removeItem('ratolo_token');
+    localStorage.removeItem('ratolo_user');
+    setUser(null);
+    setSessions([]);
+    setActiveId(null);
+  }
+
   const activeSession = sessions.find(s => s.id === activeId) ?? sessions[0];
+
+  if (!user) return <Login onLogin={handleLogin} />;
 
   return (
     <div className={styles.app}>
@@ -70,6 +89,8 @@ function App() {
         onShowTour={() => setStage('onboarding')}
         onToggleSidebar={() => setSidebarCollapsed(v => !v)}
         sidebarCollapsed={sidebarCollapsed}
+        user={user}
+        onLogout={handleLogout}
       />
       {stage === 'onboarding' ? (
         <Onboarding onStartChat={finishOnboarding} />
