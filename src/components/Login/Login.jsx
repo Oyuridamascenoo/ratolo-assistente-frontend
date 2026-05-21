@@ -50,7 +50,7 @@ export default function Login({ onLogin }) {
               value={email}
               onChange={e => setEmail(e.target.value)}
               required
-              autoFocus={mode === 'login'}
+              autoFocus
               autoComplete="username"
             />
           </div>
@@ -60,7 +60,7 @@ export default function Login({ onLogin }) {
             <input
               className={styles.input}
               type="password"
-              placeholder={mode === 'register' ? 'Mínimo 6 caracteres' : '••••••••'}
+              placeholder="••••••••"
               value={password}
               onChange={e => setPassword(e.target.value)}
               required
