@@ -54,6 +54,13 @@
   margin-top: 1px;
 }
 
+.subtitle {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--text-3);
+  line-height: 1.5;
+}
+
 .tabs {
   display: flex;
   gap: 4px;
