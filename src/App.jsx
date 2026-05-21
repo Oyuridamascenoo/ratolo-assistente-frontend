@@ -4,6 +4,7 @@ import Onboarding from './components/Onboarding/Onboarding.jsx';
 import Chat from './components/Chat/Chat.jsx';
 import Sidebar from './components/Sidebar/Sidebar.jsx';
 import Login from './components/Login/Login.jsx';
+import Knowledge from './components/Knowledge/Knowledge.jsx';
 import { api } from './services/api.js';
 import styles from './App.module.css';
 
@@ -20,6 +21,7 @@ function App() {
   const [activeId, setActiveId] = useState(null);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [apiOnline, setApiOnline] = useState(true);
+  const [showKnowledge, setShowKnowledge] = useState(false);
 
   function finishOnboarding() {
     localStorage.setItem(SEEN_KEY, '1');
@@ -91,7 +93,9 @@ function App() {
         sidebarCollapsed={sidebarCollapsed}
         user={user}
         onLogout={handleLogout}
+        onOpenKnowledge={() => setShowKnowledge(true)}
       />
+      {showKnowledge && <Knowledge onClose={() => setShowKnowledge(false)} />}
       {stage === 'onboarding' ? (
         <Onboarding onStartChat={finishOnboarding} />
       ) : (
